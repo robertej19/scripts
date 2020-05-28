@@ -8,7 +8,7 @@ set password [lindex $argv 0]
 eval spawn $cmd
 expect "assword:"
 send "$password\r";
-expect "login1%"
+expect "login"
 send "ssh -Y ifarm\r";
 expect "assword:"
 send "$password\r";
