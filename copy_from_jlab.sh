@@ -8,7 +8,7 @@ echo "Example: ./copy_from_jlab.sh test.txt"
 loc=$1
 #echo "$loc"
 
-sshpass -p "$password" scp -r robertej@ftp.jlab.org:/u/home/robertej/$loc .
+sshpass -p "$password" scp -r -v robertej@ftp.jlab.org:/u/home/robertej/$loc . 2>&1 | grep -v debug1
 
 echo '.'
 echo '.'
