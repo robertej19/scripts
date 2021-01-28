@@ -124,6 +124,7 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
+alias findfiles="grep -rnw '.' -e 'volatile'"
 
 alias openme=/home/bobby/bin/wsl-open.sh
 
@@ -158,3 +159,15 @@ fi
 LS_COLORS='ow=01;36;40'
 export LS_COLORS
 export PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH
+
+#For a simple bash terminal:
+#PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
+
+#somewhat more complicated bash terminal:
+
+HOST='\[\033[02;36m\]\h'; HOST=' '$HOST
+TIME='\[\033[01;31m\]\t \[\033[01;32m\]'
+LOCATION=' \[\033[01;34m\]`pwd | sed "s#\(/[^/]\{1,\}/[^/]\{1,\}/[^/]\{1,\}/\).*\(/[^/]\{1,\}/[^/]\{1,\}\)/\{0,1\}#\1_\2#g"`'
+#BRANCH=' \[\033[00;33m\]$(git_branch)\[\033[00m\]\n\$ '
+BRANCH=' \[\033[00;33m\]\[\033[00m\]\$ '
+PS1=$TIME$LOCATION$BRANCH
