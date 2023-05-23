@@ -1,14 +1,35 @@
-#!/bin/sh
-password="$(cat ~/scripts/.pass/.jlab)"
-username="$(cat ~/scripts/.pass/.username)"
+#!/bin/bash
+# Install expect if not already installed
+command -v expect >/dev/null 2>&1 || { echo >&2 "The script requires 'expect' but it's not installed. Installing now."; sudo apt-get install expect; }
 
-echo "Usage: Enter relative path of file or directory to be copied from local to remote"
-echo "Example: ./copy_from_jlab.sh test.txt"
 
-loc=$1
+# Read passwords
+password1=$(head -n 1 ~/scripts/.pass/.jlab_pin)
+password2=$(head -n 1 ~/scripts/.pass/.jlab)
 
-sshpass -p "$password" scp -r -v $username@ftp.jlab.org:/u/home/$username/$loc . 2>&1 | grep -v debug1
+# Ask for the file to download
+echo "Please enter the path of the file to download starting with path, e.g. ~/file_in_home_dir:"
+read file_to_download
 
-echo '...'
 
-echo Copied $loc from remote to local
+# Ask for 6 digit code
+echo "Please enter the 6-digit code:"
+read code
+
+/usr/bin/expect << EOF
+spawn scp -J robertej@scilogin.jlab.org robertej@ifarm:$file_to_download ./
+expect {
+  timeout { send_user "\nFailed to get password prompt\n"; exit 1 }
+  "Password:"
+}
+send "$password1$code\r"
+expect {
+  timeout { send_user "\nFailed to get second password prompt\n"; exit 1 }
+  "Password:"
+}
+send "$password2\r"
+expect {
+  timeout { send_user "\nFailed to establish SSH session\n"; exit 1 }
+  eof
+}
+EOF
