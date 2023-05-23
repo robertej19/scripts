@@ -10,7 +10,7 @@ expect "assword:"
 send "$password\r";
 expect "login"
 send "ssh -Y ifarm1901.jlab.org\r";
-expect "assword:"
-send "$password\r";
-interact
+#expect "assword:"
+#send "$password\r";
+#interact
 
